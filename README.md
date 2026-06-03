@@ -11,7 +11,8 @@ Proje Java Spring Boot kullanılarak geliştirilmiştir.
 - Spring Boot
 - Spring Data JPA
 - Spring Security
-- PostgreSQL
+- H2 Database (geliştirme/test)
+- PostgreSQL Driver
 - Maven
 - Postman
 ---
@@ -173,4 +174,68 @@ Tüm endpointler Postman üzerinden test edilmiştir.
 - DELETE
 işlemleri başarıyla çalışmaktadır.
 ---
+
+# Kurulum ve Çalıştırma
+Projeyi bilgisayarınıza indirmek için:
+
+```bash
+git clone https://github.com/Meryemcfti/jewelry-store-management.git
+```
+komutunu kullanabilirsiniz.
+
+## Gereksinimler
+Projeyi çalıştırabilmek için aşağıdaki yazılımların yüklü olması gerekir:
+* Java 17
+* Maven
+* IntelliJ IDEA
+* Postman
+
+## Projeyi Çalıştırma
+1. Projeyi IntelliJ IDEA ile açın.
+2. Maven bağımlılıklarının yüklenmesini bekleyin.
+3. JewelryStoreManagementApplication sınıfını çalıştırın.
+4. Uygulama varsayılan olarak aşağıdaki adreste çalışacaktır:
+
+```text
+http://localhost:8080
+```
+
+## API Testleri
+API istekleri Postman üzerinden test edilebilir.
+
+Örnek endpointler:
+```text
+GET    /products
+POST   /products
+GET    /customers
+POST   /customers
+GET    /suppliers
+POST   /suppliers
+GET    /payments
+POST   /payments
+```
+
+## Kullanıcı Rolleri
+USER
+* Sadece GET işlemleri yapabilir.
+
+ADMIN
+* GET
+* POST
+* PUT
+* DELETE
+işlemlerini yapabilir.
+
+Kullanılan test kullanıcıları:
+
+```text
+Kullanıcı Adı: user
+Şifre: 1234
+```
+
+```text
+Kullanıcı Adı: admin
+Şifre: 1234
+```
+
 
