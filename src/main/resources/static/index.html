@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Kuyumcu Yönetim Sistemi</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background:
+        linear-gradient(rgba(15,11,7,.88), rgba(15,11,7,.88)),
+        url("https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=1600&q=80");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #2c2418;
+}
+
+        .hero {
+            min-height: 280px;
+            padding: 45px 60px;
+            color: white;
+            background:
+                linear-gradient(120deg, rgba(20,12,4,.95), rgba(111,70,8,.88), rgba(205,155,48,.82)),
+                url("https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=1600&q=80");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 46px;
+            letter-spacing: 1px;
+        }
+
+        .hero p {
+            margin-top: 12px;
+            font-size: 18px;
+            max-width: 700px;
+            opacity: .93;
+        }
+
+        .container {
+            width: 92%;
+            margin: -70px auto 40px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,.96);
+            padding: 25px;
+            border-radius: 22px;
+            box-shadow: 0 18px 40px rgba(0,0,0,.22);
+            border: 1px solid rgba(217,172,76,.35);
+        }
+
+        .stat-card h3 {
+            margin: 0;
+            font-size: 15px;
+            color: #8a5a08;
+            text-transform: uppercase;
+            letter-spacing: .7px;
+        }
+
+        .stat-card p {
+            margin: 12px 0 0;
+            font-size: 34px;
+            font-weight: 800;
+        }
+
+        .gold-card {
+            background: linear-gradient(135deg, #6b4308, #d7a33d);
+            color: white;
+        }
+
+        .gold-card h3 { color: white; }
+        .gold-card .small { font-size: 13px; margin-top: 8px; opacity: .9; }
+
+        .section {
+            background: #fffaf3;
+            border-radius: 24px;
+            padding: 28px;
+            margin-bottom: 28px;
+            box-shadow: 0 15px 35px rgba(0,0,0,.18);
+            border: 1px solid rgba(200,150,50,.25);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #eadcc8;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+
+        .section-title h2 {
+            margin: 0;
+            color: #5b3600;
+            font-size: 25px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 13px;
+            margin-bottom: 16px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #d8c6aa;
+            border-radius: 13px;
+            background: white;
+            outline: none;
+            font-size: 14px;
+        }
+
+        input:focus, select:focus {
+            border-color: #b8860b;
+            box-shadow: 0 0 0 4px rgba(184,134,11,.13);
+        }
+
+        button {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 13px;
+            background: linear-gradient(135deg, #6b4308, #b8860b);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(100,60,0,.25);
+        }
+
+        .dark-btn {
+            background: #21170d;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 18px;
+            overflow: hidden;
+            border-radius: 16px;
+            background: white;
+        }
+
+        th {
+            background: #5b3600;
+            color: white;
+            padding: 14px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #eee2d0;
+            font-size: 14px;
+        }
+
+        tr:hover td {
+            background: #fff3dd;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #fff0c8;
+            color: #7b5100;
+            padding: 6px 11px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        footer {
+            color: #d8c6aa;
+            text-align: center;
+            padding: 30px;
+        }
+
+        @media (max-width: 1000px) {
+            .dashboard, .form-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 650px) {
+            .hero { padding: 35px 25px; }
+            .hero h1 { font-size: 32px; }
+            .container { width: 94%; }
+            .dashboard, .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>Kuyumcu Yönetim Sistemi</h1>
+    <p>
+    Ürün takibi, müşteri yönetimi, tedarik süreçleri ve ödeme işlemlerini tek ekranda birleştiren kurumsal yönetim paneli.
+</p>
+</div>
+
+<div class="container">
+
+    <div class="dashboard">
+        <div class="stat-card">
+            <h3>Toplam Ürün</h3>
+            <p id="productCount">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Toplam Müşteri</h3>
+            <p id="customerCount">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Toplam Tedarikçi</h3>
+            <p id="supplierCount">0</p>
+        </div>
+
+        <div class="stat-card gold-card">
+            <h3>Gram Altın</h3>
+            <p id="goldPrice">Yükleniyor...</p>
+            <div class="small" id="goldInfo">Anlık fiyat kontrol ediliyor</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">
+            <h2>Ürün Yönetimi</h2>
+            <button class="dark-btn" onclick="loadProducts()">Ürünleri Listele</button>
+        </div>
+
+        <div class="form-grid">
+            <input id="productName" placeholder="Ürün adı">
+            <input id="brand" placeholder="Marka">
+            <input id="price" type="number" placeholder="Fiyat">
+            <input id="stockQuantity" type="number" placeholder="Stok">
+            <input id="karat" type="number" placeholder="Ayar">
+            <input id="gram" type="number" placeholder="Gram">
+        </div>
+
+        <button onclick="addProduct()">Ürün Ekle</button>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th><th>Ürün</th><th>Marka</th><th>Fiyat</th><th>Stok</th><th>Ayar</th><th>Gram</th>
+            </tr>
+            </thead>
+            <tbody id="productTable"></tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="section-title">
+            <h2>Müşteri Yönetimi</h2>
+            <button class="dark-btn" onclick="loadCustomers()">Müşterileri Listele</button>
+        </div>
+
+        <div class="form-grid">
+            <input id="firstName" placeholder="Ad">
+            <input id="lastName" placeholder="Soyad">
+            <input id="customerEmail" placeholder="E-posta">
+            <input id="customerPhone" placeholder="Telefon">
+            <input id="customerAddress" placeholder="Adres">
+        </div>
+
+        <button onclick="addCustomer()">Müşteri Ekle</button>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th><th>Ad</th><th>Soyad</th><th>E-posta</th><th>Telefon</th><th>Adres</th>
+            </tr>
+            </thead>
+            <tbody id="customerTable"></tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="section-title">
+            <h2>Tedarikçi Yönetimi</h2>
+            <button class="dark-btn" onclick="loadSuppliers()">Tedarikçileri Listele</button>
+        </div>
+
+        <div class="form-grid">
+            <input id="companyName" placeholder="Firma adı">
+            <input id="contactName" placeholder="Yetkili kişi">
+            <input id="supplierPhone" placeholder="Telefon">
+            <input id="supplierEmail" placeholder="E-posta">
+            <input id="supplierAddress" placeholder="Adres">
+        </div>
+
+        <button onclick="addSupplier()">Tedarikçi Ekle</button>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th><th>Firma</th><th>Yetkili</th><th>Telefon</th><th>E-posta</th><th>Adres</th>
+            </tr>
+            </thead>
+            <tbody id="supplierTable"></tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="section-title">
+            <h2>Ödeme Yönetimi</h2>
+            <button class="dark-btn" onclick="loadPayments()">Ödemeleri Listele</button>
+        </div>
+
+        <div class="form-grid">
+            <input id="paymentCustomerId" type="number" placeholder="Müşteri ID">
+            <input id="paymentProductId" type="number" placeholder="Ürün ID">
+            <input id="paymentAmount" type="number" placeholder="Tutar">
+            <select id="paymentMethod">
+                <option>Kredi Kartı</option>
+                <option>Nakit</option>
+                <option>Havale</option>
+            </select>
+        </div>
+
+        <button onclick="addPayment()">Ödeme Ekle</button>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th><th>Müşteri</th><th>Ürün</th><th>Tutar</th><th>Yöntem</th><th>Tarih</th>
+            </tr>
+            </thead>
+            <tbody id="paymentTable"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<footer>Orta Düzey Programlama Final Projesi | Jewelry Store Management</footer>
+
+<script>
+    const username = "admin";
+    const password = "1234";
+
+    function authHeader() {
+        return "Basic " + btoa(username + ":" + password);
+    }
+
+    function api(url, method = "GET", body = null) {
+        return fetch(url, {
+            method,
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": authHeader()
+            },
+            body: body ? JSON.stringify(body) : null
+        });
+    }
+
+    function loadProducts() {
+        api("/products").then(r => r.json()).then(data => {
+            productCount.innerText = data.length;
+            productTable.innerHTML = data.map(p => `
+                <tr>
+                    <td>${p.id}</td>
+                    <td>${p.productName}</td>
+                    <td>${p.brand}</td>
+                    <td>${p.price} TL</td>
+                    <td>${p.stockQuantity}</td>
+                    <td><span class="badge">${p.karat} Ayar</span></td>
+                    <td>${p.gram}</td>
+                </tr>
+            `).join("");
+        });
+    }
+
+    function addProduct() {
+        api("/products", "POST", {
+            productName: productName.value,
+            brand: brand.value,
+            price: Number(price.value),
+            stockQuantity: Number(stockQuantity.value),
+            karat: Number(karat.value),
+            gram: Number(gram.value)
+        }).then(() => { alert("Ürün eklendi."); loadProducts(); });
+    }
+
+    function loadCustomers() {
+        api("/customers").then(r => r.json()).then(data => {
+            customerCount.innerText = data.length;
+            customerTable.innerHTML = data.map(c => `
+                <tr>
+                    <td>${c.id}</td>
+                    <td>${c.firstName}</td>
+                    <td>${c.lastName}</td>
+                    <td>${c.email}</td>
+                    <td>${c.phoneNumber}</td>
+                    <td>${c.address}</td>
+                </tr>
+            `).join("");
+        });
+    }
+
+    function addCustomer() {
+        api("/customers", "POST", {
+            firstName: firstName.value,
+            lastName: lastName.value,
+            email: customerEmail.value,
+            phoneNumber: customerPhone.value,
+            address: customerAddress.value
+        }).then(() => { alert("Müşteri eklendi."); loadCustomers(); });
+    }
+
+    function loadSuppliers() {
+        api("/suppliers").then(r => r.json()).then(data => {
+            supplierCount.innerText = data.length;
+            supplierTable.innerHTML = data.map(s => `
+                <tr>
+                    <td>${s.id}</td>
+                    <td>${s.companyName}</td>
+                    <td>${s.contactName}</td>
+                    <td>${s.phoneNumber}</td>
+                    <td>${s.email}</td>
+                    <td>${s.address}</td>
+                </tr>
+            `).join("");
+        });
+    }
+
+    function addSupplier() {
+        api("/suppliers", "POST", {
+            companyName: companyName.value,
+            contactName: contactName.value,
+            phoneNumber: supplierPhone.value,
+            email: supplierEmail.value,
+            address: supplierAddress.value
+        }).then(() => { alert("Tedarikçi eklendi."); loadSuppliers(); });
+    }
+
+    function loadPayments() {
+        api("/payments").then(r => r.json()).then(data => {
+            paymentTable.innerHTML = data.map(p => `
+                <tr>
+                    <td>${p.id}</td>
+                    <td>${p.customer ? p.customer.firstName + " " + p.customer.lastName : "-"}</td>
+                    <td>${p.product ? p.product.productName : "-"}</td>
+                    <td>${p.amount} TL</td>
+                    <td>${p.paymentMethod}</td>
+                    <td>${p.paymentDate ? p.paymentDate.replace("T", " ") : "-"}</td>
+                </tr>
+            `).join("");
+        });
+    }
+
+    function addPayment() {
+        api("/payments", "POST", {
+            customerId: Number(paymentCustomerId.value),
+            productId: Number(paymentProductId.value),
+            amount: Number(paymentAmount.value),
+            paymentMethod: paymentMethod.value
+        }).then(() => { alert("Ödeme eklendi."); loadPayments(); });
+    }
+
+    function loadGoldPrice() {
+        fetch("https://finans.truncgil.com/today.json")
+            .then(r => r.json())
+            .then(data => {
+                const gram = data["Gram Altın"];
+                if (gram && gram["Satış"]) {
+                    goldPrice.innerText = gram["Satış"] + " TL";
+                    goldInfo.innerText = "Güncel altın fiyatı API üzerinden alınmıştır.";
+                } else {
+                    goldPrice.innerText = "Bilgi alınamadı";
+                    goldInfo.innerText = "API yanıtı beklenen formatta değil.";
+                }
+            })
+            .catch(() => {
+                goldPrice.innerText = "API erişilemedi";
+                goldInfo.innerText = "Dış API bağlantısı kurulamadı.";
+            });
+    }
+
+
+function seedData() {
+
+    api("/products").then(r => r.json()).then(products => {
+        if(products.length === 0){
+
+            api("/products","POST",{
+                productName:"22 Ayar Altın Bilezik",
+                brand:"Zen Gold",
+                price:45000,
+                stockQuantity:10,
+                karat:22,
+                gram:18
+            });
+
+            api("/products","POST",{
+                productName:"Altın Kolye",
+                brand:"Ariş",
+                price:32000,
+                stockQuantity:8,
+                karat:22,
+                gram:12
+            });
+
+            api("/products","POST",{
+                productName:"Tektaş Yüzük",
+                brand:"Blue Diamond",
+                price:28000,
+                stockQuantity:5,
+                karat:14,
+                gram:4
+            });
+
+            api("/products","POST",{
+                productName:"Baget Yüzük",
+                brand:"Atasay",
+                price:39000,
+                stockQuantity:4,
+                karat:14,
+                gram:5
+            });
+
+            api("/products","POST",{
+                productName:"Altın Küpe",
+                brand:"Gold Time",
+                price:18500,
+                stockQuantity:12,
+                karat:22,
+                gram:7
+            });
+        }
+    });
+
+    api("/customers").then(r => r.json()).then(customers => {
+        if(customers.length === 0){
+
+            api("/customers","POST",{
+                firstName:"Meryem",
+                lastName:"Çiftçi",
+                email:"meryem@example.com",
+                phoneNumber:"05551112233",
+                address:"İzmir"
+            });
+
+            api("/customers","POST",{
+                firstName:"Ayşe",
+                lastName:"Demir",
+                email:"ayse@example.com",
+                phoneNumber:"05552223344",
+                address:"Ankara"
+            });
+
+            api("/customers","POST",{
+                firstName:"Leyla",
+                lastName:"Yılmaz",
+                email:"leyla@example.com",
+                phoneNumber:"05553334455",
+                address:"İstanbul"
+            });
+        }
+    });
+
+    api("/suppliers").then(r => r.json()).then(suppliers => {
+        if(suppliers.length === 0){
+
+            api("/suppliers","POST",{
+                companyName:"Altın Tedarik A.Ş.",
+                contactName:"Mehmet Kaya",
+                phoneNumber:"05550001122",
+                email:"tedarik@example.com",
+                address:"İstanbul"
+            });
+
+            api("/suppliers","POST",{
+                companyName:"Mücevher Market",
+                contactName:"Elif Şahin",
+                phoneNumber:"05550002233",
+                email:"mucevher@example.com",
+                address:"Ankara"
+            });
+        }
+    });
+
+}
+
+seedData();
+
+setTimeout(() => {
+    loadProducts();
+    loadCustomers();
+    loadSuppliers();
+    loadPayments();
+    loadGoldPrice();
+}, 1500);
+
+    loadProducts();
+    loadCustomers();
+    loadSuppliers();
+    loadPayments();
+    loadGoldPrice();
+</script>
+
+</body>
+</html>
