@@ -74,7 +74,7 @@ Bu sayede hangi müşterinin hangi ürün için ödeme yaptığı takip edilebil
 # Katmanlı Mimari
 Projede Spring Boot'un katmanlı mimarisi kullanılmıştır.
 # Entity
-Veritabanındaki tabloları temsil eder.
+Sınıfları veritabanındaki tabloları temsil etmektedir.
 
 Örnek:
 - Product
